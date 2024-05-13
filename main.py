@@ -1,5 +1,5 @@
 from data import info
-from classes.indeed_bot import IndeedBot
+from classes.indeed import Indeed
 
-bot = IndeedBot(info)
-bot.login()
+indeed_bot = Indeed(info)
+indeed_bot.login()
