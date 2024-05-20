@@ -14,21 +14,25 @@ from utils.indeed import sign_in
 from utils.indeed import search
 
 
-class Indeed:
-    def __init__(self, info):
+class Indeed(webdriver.Firefox):
+    def __init__(self, driver_path="Browser\geckodriver.exe"):
         # create a new Firefox session
-        service = Service(executable_path=r"Browser\geckodriver.exe")
-        self.driver = webdriver.Firefox(service=service)
+        # service = Service(executable_path=r"Browser\geckodriver.exe")
+        self.driver_path = driver_path
+        super(Indeed, self).__init__()
 
-        self.info = info
+        # self.driver = webdriver.Firefox(service=service)
+
+        # self.info = info
         # open indeed
-        self.driver.get("https://secure.indeed.com/account/login")
+        # self.driver.get("https://secure.indeed.com/account/login")
+        # self.driver.implicitly_wait(5)
 
         # Create headless chrome
         # options = Options()
         # options.headless = True
 
-    def login(self):
+    """ def login(self):
         print("Logging in Indeed".center(80, "-"))
         try:
             # Email
@@ -54,3 +58,16 @@ class Indeed:
 
         except:
             print("There was an error during login process")
+
+    def find_job(self):
+        print(f"Searching a job of '{self.info.job}' in '{self.info.place}'")
+        search.enter_job(self.driver, self.info)
+        search.enter_place(self.driver, self.info)
+
+        time.sleep(2)
+        button = self.driver.find_element(
+            By.XPATH,
+            "/html/body/div/div[1]/div/span/div[4]/div[1]/div/div/div/div/form/div/div[2]/button",
+        ).click()
+
+        search.extract_results(self.driver) """
