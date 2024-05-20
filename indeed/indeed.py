@@ -3,16 +3,16 @@ import time
 
 # Selenium tools
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # Modules
 import indeed.info as info
-from indeed.utils import logon
 
 
 class Indeed(webdriver.Firefox):
@@ -275,7 +275,10 @@ class Indeed(webdriver.Firefox):
             pass
 
     def search_job(self):
-        """Search your desirable job by place"""
+        """Search your desirable job by place in Indeed browser"""
+        # In the future add add action to select the first elemene tof the list.
+
+        print("Searching your derireble job...")
         time.sleep(1)
 
         # Get job field
@@ -290,3 +293,44 @@ class Indeed(webdriver.Firefox):
 
         # Write place in text box
         place_element.send_keys(self.PLACE)
+
+        home_button = self.find_element(
+            By.CSS_SELECTOR,
+            'button[type="submit"]',
+        ).click()
+
+    def click_job(self, folder=None):
+
+        # Finde job elements
+        job_elements = self.find_elements(
+            By.CSS_SELECTOR,
+            'a[data-hide-spinner="true"]',
+        )
+
+        print("Job offers - page 1".center(50, "-"))
+        for i, job in enumerate(job_elements):
+            print(f"job {i}: ", job.text)
+            # print("element:", job)
+
+            # Click in job
+            job.click()
+            # Wait description to load
+            time.sleep(2)
+
+            # Job description element
+            job_description_element = self.find_element(By.ID, "jobDescriptionText")
+
+            if folder != None:
+                title = job.text
+                main_text = job_description_element.text
+                file_path = os.path.join(folder, f"Job{i}.txt")
+
+                with open(file_path, "w", encoding="utf-8") as file:
+                    # Write the title
+                    file.write(title + "\n")
+                    file.write(
+                        "=" * len(title) + "\n"
+                    )  # Add a separator line under the title
+
+                    # Write the main text
+                    file.write(main_text + "\n")

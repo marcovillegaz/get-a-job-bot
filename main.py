@@ -4,7 +4,6 @@ from indeed.indeed import Indeed
 with Indeed(teardown=False) as bot:
     # Go to login page
     bot.land_webpage()
-
     # Email
     bot.enter_email()
 
@@ -19,4 +18,10 @@ with Indeed(teardown=False) as bot:
 
     # Go to home page
     bot.homepage()
-    # bot.search_job()
+    # Serch job in browser
+    bot.search_job()  # add job, place as inputs external of indeed\info.py
+    # Extractjob information
+    bot.click_job(folder=r"data")
+
+    # extend to more pages
+    # extract company info.
