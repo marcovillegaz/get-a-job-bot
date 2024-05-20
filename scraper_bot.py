@@ -21,7 +21,7 @@ with Indeed(teardown=False) as bot:
     # Serch job in browser
     bot.search_job()  # add job, place as inputs external of indeed\info.py
     # Extractjob information
-    bot.click_job(folder=r"data")
+    bot.click_job()
 
     # extend to more pages
-    # extract company info.
+    # extract company info. folder=r"data"
