@@ -300,8 +300,7 @@ class Indeed(webdriver.Firefox):
         ).click()
 
     def click_job(self, folder=None):
-
-        # Finde job elements
+        # Find job elements
         job_elements = self.find_elements(
             By.CSS_SELECTOR,
             'a[data-hide-spinner="true"]',
@@ -309,28 +308,47 @@ class Indeed(webdriver.Firefox):
 
         print("Job offers - page 1".center(50, "-"))
         for i, job in enumerate(job_elements):
-            print(f"job {i}: ", job.text)
-            # print("element:", job)
-
             # Click in job
             job.click()
             # Wait description to load
             time.sleep(2)
 
-            # Job description element
+            # Place
+            place_element = self.find_element(
+                By.CSS_SELECTOR,
+                'div[data-testid="inlineHeader-companyLocation"]',
+            )
+            # Company
+            company_element = self.find_element(
+                By.CSS_SELECTOR, 'a[class="css-1ioi40n e19afand0"]'
+            )
+            # Job description
             job_description_element = self.find_element(By.ID, "jobDescriptionText")
 
+            # extractat information
+            title = job.text
+            job_id = job.get_attribute("id")
+            place = place_element.text
+            company_name = company_element.text
+            company_url = company_element.get_attribute("href")
+            description = job_description_element.text
+
+            # Save in text file or show in console
             if folder != None:
-                title = job.text
-                main_text = job_description_element.text
-                file_path = os.path.join(folder, f"Job{i}.txt")
+                # Define path
+                file_path = os.path.join(folder, job_id + ".txt")
 
+                # Write the scrapped information in text file
                 with open(file_path, "w", encoding="utf-8") as file:
-                    # Write the title
-                    file.write(title + "\n")
-                    file.write(
-                        "=" * len(title) + "\n"
-                    )  # Add a separator line under the title
+                    file.write("Job title:\n" + title + "\n")
+                    file.write("Job place:\n" + place + "\n")
+                    file.write("Company_name:\n" + company_name + "\n")
+                    file.write("Company_url:\n" + company_url + "\n")
+                    file.write("Description:\n" + description + "\n")
 
-                    # Write the main text
-                    file.write(main_text + "\n")
+            else:
+                print(job_id.center(50, "-"))
+                print("Job title: " + title)
+                print("Job place: " + place)
+                print("Company_name: " + company_name)
+                print("Company_url: " + company_url)
